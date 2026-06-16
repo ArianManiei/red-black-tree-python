@@ -115,3 +115,57 @@ class RedBlackTree:
             else:
                 current = current.right
         return current
+
+    def _minimum(self,node: Node)->Node:
+        while node.left != self.sentinel:
+            node = node.left
+        return node
+
+    def _transplant(self, node: Node, newNode: Node):
+        if node.parent == self.sentinel:
+            self.root = newNode
+        else:
+            if node.parent.left==node:
+                node.parent.left=newNode
+            else:
+                node.parent.right=newNode
+        newNode.parent=node.parent
+
+    def delete(self,val: int):
+        current = self.search(val)
+
+        if(current==self.sentinel):
+            raise ValueError("Value not found")
+
+        current_color=current.color
+
+        if(current.left==self.sentinel and current.right!=self.sentinel):
+            x=current.right
+            self._transplant(current, current.right)
+
+        elif(current.right==self.sentinel and current.left!=self.sentinel):
+            x=current.left
+            self._transplant(current, current.left)
+
+        else:
+            y=self._minimum(current.right)
+            y_color=y.color
+            x=y.right
+            if(y.parent ==current):
+                x.parent=y
+            else:
+                self._transplant(y, y.right)
+                y.right=current.right
+                y.right.parent=y
+            self._transplant(current, y)
+            y.left=current.left
+            y.left.parent=y
+            y.color=current.color
+
+        if(current_color==Color.BLACK):
+            self.fixup(x)
+
+    def _delete_fixup(self,node: Node):
+        #TODO:
+        raise NotImplementedError()
+
