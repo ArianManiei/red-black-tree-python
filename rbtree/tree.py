@@ -149,7 +149,6 @@ class RedBlackTree:
 
         else:
             y=self._minimum(current.right)
-            y_color=y.color
             x=y.right
             if(y.parent ==current):
                 x.parent=y
@@ -165,7 +164,59 @@ class RedBlackTree:
         if(current_color==Color.BLACK):
             self.fixup(x)
 
-    def _delete_fixup(self,node: Node):
-        #TODO:
-        raise NotImplementedError()
+    def _delete_fixup(self, x: Node):
+        while x != self.root and x.color == Color.BLACK:
+
+            if x == x.parent.left:
+                w = x.parent.right
+
+                if w.color == Color.RED:
+                    w.color = Color.BLACK
+                    x.parent.color = Color.RED
+                    self.rotateLeft(x.parent)
+                    w = x.parent.right
+
+                if w.left.color == Color.BLACK and w.right.color == Color.BLACK:
+                    w.color = Color.RED
+                    x = x.parent
+                else:
+                    if w.right.color == Color.BLACK:
+                        w.left.color = Color.BLACK
+                        w.color = Color.RED
+                        self.rotateRight(w)
+                        w = x.parent.right
+
+                    w.color = x.parent.color
+                    x.parent.color = Color.BLACK
+                    w.right.color = Color.BLACK
+                    self.rotateLeft(x.parent)
+                    x = self.root
+
+            else:
+                w = x.parent.left
+
+                if w.color == Color.RED:
+                    w.color = Color.BLACK
+                    x.parent.color = Color.RED
+                    self.rotateRight(x.parent)
+                    w = x.parent.left
+
+                if w.right.color == Color.BLACK and w.left.color == Color.BLACK:
+                    w.color = Color.RED
+                    x = x.parent
+                else:
+                    if w.left.color == Color.BLACK:
+                        w.right.color = Color.BLACK
+                        w.color = Color.RED
+                        self.rotateLeft(w)
+                        w = x.parent.left
+
+                    w.color = x.parent.color
+                    x.parent.color = Color.BLACK
+                    w.left.color = Color.BLACK
+                    self.rotateRight(x.parent)
+                    x = self.root
+
+        x.color = Color.BLACK
+
 
